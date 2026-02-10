@@ -1,10 +1,9 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tetris
 spec:
-  replicas: 3
+  replicas: 1   # HPA will control replicas
   selector:
     matchLabels:
       app: tetris
@@ -17,19 +16,26 @@ spec:
       - name: tetris
         image: sksaabiq123/tetris:v2
         ports:
-        - containerPort: 3000   # Use port 3000
+        - containerPort: 3000
 
+        # 🔴 REQUIRED FOR HPA
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: tetris-service
 spec:
+  type: LoadBalancer
   selector:
     app: tetris
   ports:
   - protocol: TCP
-    port: 80                 # Expose port 80
+    port: 80
     targetPort: 3000
-  type: LoadBalancer
-
