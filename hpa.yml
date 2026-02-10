@@ -3,12 +3,12 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: tetris-hpa
 spec:
+  minReplicas: 2
+  maxReplicas: 6
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: tetris
-  minReplicas: 2
-  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
@@ -16,3 +16,10 @@ spec:
       target:
         type: Utilization
         averageUtilization: 50
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Pods
+        value: 1
+        periodSeconds: 60
