@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tetris
 spec:
-  replicas: 1   # HPA will control replicas
+  replicas: 3   # HPA will control replicas
   selector:
     matchLabels:
       app: tetris
